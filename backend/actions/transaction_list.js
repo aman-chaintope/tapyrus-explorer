@@ -135,6 +135,76 @@ const createCache = function(){
  });
 }
 
+
+
+const createCoinCache = function(){
+  
+
+  return new Promise( (resolve, reject) => {
+
+  try{
+     
+      const cache = flatCache.load('coin');
+
+      getBlockchainInfo().then( async (bestBlockHeight) => {
+
+        let count = 0;
+        let cacheBestBlockHeight = cache.getKey(`bestBlockHeight`);
+
+
+        if(!cacheBestBlockHeight)
+          cacheBestBlockHeight = 0;
+
+        else if( cacheBestBlockHeight == bestBlockHeight){
+            console.log("Transaction Cache is up-to-date");
+            cacheBestBlockHeight++;
+              return resolve();
+          }
+        else{
+            cacheBestBlockHeight++;
+            count = cache.getKey(`transactionCount`);
+        }
+
+        while((cacheBestBlockHeight <=  bestBlockHeight)){
+          const block = await getBlockWithTx(cacheBestBlockHeight);
+          
+          for(let i =0; i<block.nTx; i++){
+            const response = await cl.command([
+              { 
+                method: 'getrawtransaction', 
+                parameters: {
+                  txid: block.tx[i],
+                  verbose: true
+                }
+              }
+            ]);
+            const trans = response[0];
+            console.log(trans.vout[0].scriptPubKey.asm, trans.vout[0].scriptPubKey.asm.split(" ").indexOf("OP_DUP"))
+            
+            if(trans.vout[0].scriptPubKey.asm.split(" ").indexOf("OP_DUP") != -1)
+              await cache.setKey(`${count++}`, block.tx[i]);
+          }
+
+          cacheBestBlockHeight++;
+        }
+
+        await cache.setKey('bestBlockHeight', bestBlockHeight);
+        await cache.setKey('transactionCount', count);
+
+        console.log("Updated cache till block height -> ", bestBlockHeight)
+        console.log("New transaction count -> ", count)
+
+
+        await cache.save(true /* noPrune */);
+        return resolve();
+        
+        });
+  } catch (err) {
+    return reject(err);
+  }
+ });
+}
+
 app.get('/transactions', (req, res) => {
   //Return a List of transactions
 
@@ -148,6 +218,7 @@ app.get('/transactions', (req, res) => {
       getBlockchainInfo().then( async (bestBlockHeight) => {
 
         //let cacheBestBlockHeight = cache.getKey(`bestBlockHeight`);
+        createCoinCache();
 
         createCache().then( async () => {
 
@@ -208,6 +279,7 @@ app.get('/transactions', (req, res) => {
               results: transList.reverse(),
               txCount
             });
+            //console.log("list", transList[22].vin, transList[22].vout[0].scriptPubKey.asm.split(" ").indexOf("OP_DUP"))
             return;
           } 
           else {

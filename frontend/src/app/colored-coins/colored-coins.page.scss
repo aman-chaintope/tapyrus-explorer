@@ -1,0 +1,29 @@
+ion-content {
+    --background: var(--ion-item-background, var(--ion-background-color, #E5E5E5)) !important;
+}
+  
+#table {
+    background-color: #FBFBFB;
+}
+  
+#table-header {
+    background-color:#F6F6F6;
+    ion-col {
+        color: #AAAAAA;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 16px;
+        letter-spacing: 0.02em;
+        padding: 15px 10px;
+    }
+}
+
+.table-border-bottom {
+    border-bottom: 1px solid #F6F6F6;
+}
+
+.display-none-max-md {
+    @media (max-width: 768px) {
+        display: none;
+    }  
+}

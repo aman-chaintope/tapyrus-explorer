@@ -1,0 +1,28 @@
+
+.bg-dark-md {
+    @media (min-width: 0px) and (max-width: 768px) {
+        background: #282828 !important;
+        --background: #282828 !important;
+    }
+}
+
+
+#table {
+    background-color: rgb(235, 225, 225);
+}
+  
+#table-header {
+    background-color:#F6F6F6;
+    ion-col {
+        color: #AAAAAA;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 16px;
+        letter-spacing: 0.02em;
+        padding: 15px 10px;
+    }
+}
+
+.table-border-bottom {
+    border-bottom: 1px solid #F6F6F6;
+}

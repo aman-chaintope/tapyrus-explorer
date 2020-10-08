@@ -2,29 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 
-import { ModalController } from '@ionic/angular';
-
-import { TransactionsModalPage } from '../transactions-modal/transactions-modal.page';
-
 @Component({
-  selector: 'app-transactions',
-  templateUrl: './transactions.page.html',
-  styleUrls: ['./transactions.page.scss'],
+  selector: 'app-colored-coins',
+  templateUrl: './colored-coins.page.html',
+  styleUrls: ['./colored-coins.page.scss'],
 })
-export class TransactionsPage implements OnInit {
+
+export class ColoredCoinsPage implements OnInit {
   perPage = 25; // default with 20 per page
   page = 1; // default start with page 1
   pages = 1; // number of pages
   transactions: any = [];
   searchValue: string;
   txCount = 0;
-  coins = [{"id" : "c396dfd97de19a09479dfceabee57c3f83c99c167683468443c2327da86432efdc" , "amount" : 11},
-  {"id" : "c2c99c167683468443c2327da86432efdc96dfd97de19a09479dfceabee57c3f83" , "amount" : 13.22},
-  {"id" : "c1e19a09479dfceabee57c3f83c99c167683468443c2327da86432efdc96dfd97d" , "amount" : 41.73},
-  {"id" : "TPC" , "amount" : 50}]
 
-
-  constructor(private httpClient: HttpClient, private navCtrl: NavController,  private modalCtrl: ModalController ) {}
+  constructor(private httpClient: HttpClient, private navCtrl: NavController) {}
 
   ngOnInit() {
     this.getTransactionLists();
@@ -69,6 +61,7 @@ export class TransactionsPage implements OnInit {
   }
 
   goToTransaction(txid: string) {
+    console.log("test, goToTransaction", txid)
     this.navCtrl.navigateForward(`/transactions/${txid}`);
   }
 
@@ -88,15 +81,6 @@ export class TransactionsPage implements OnInit {
         }
       );
   }
-
-  async goToTransactionModal() {
-    const modal = await this.modalCtrl.create({
-      component: TransactionsModalPage,
-      componentProps: {
-        coins: this.coins
-      },
-      cssClass: 'raw-data-modal'
-    });
-    return await modal.present();
-  }
 }
+
+

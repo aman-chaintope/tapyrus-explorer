@@ -4,24 +4,22 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { TransactionsPageRoutingModule } from './transactions-routing.module';
+import { ColoredCoinsPageRoutingModule } from './colored-coins-routing.module';
 
-import { TransactionsPage } from './transactions.page';
+import { ColoredCoinsPage } from './colored-coins.page';
+
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedPipeModule } from '../modules/sharePipe.module';
-
-import { TransactionsModalPage} from '../transactions-modal/transactions-modal.page' 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TransactionsPageRoutingModule,
+    ColoredCoinsPageRoutingModule,
     SharedPipeModule,
     NgxPaginationModule
   ],
-  declarations: [TransactionsPage, TransactionsModalPage],
-  entryComponents: [TransactionsModalPage]
+  declarations: [ColoredCoinsPage]
 })
-export class TransactionsPageModule {}
+export class ColoredCoinsPageModule {}

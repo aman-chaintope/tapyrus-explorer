@@ -1,0 +1,93 @@
+<ion-content class="pb-footer">
+  <div class="ion-padding">
+    <div class="bg-white ion-padding">
+      <ion-row>
+        <ion-col size="8">
+          <div class="flex">
+            <p id="block-header-text">Identifier</p>
+            <p class="text-wrap">c396dfd97de19a09479dfceabee57c3f83c99c167683468443c2327da86432efdc</p>
+            <ion-icon name="copy-outline" (click)="copyAddress()" color="primary" style="margin:16px 2px;" id="copy-icon"></ion-icon>
+          </div>
+          <div id="block-hash-bg" class="col-5">
+          <strong id="block-hash-text">  <strong>Total Issued:</strong>   {{ balanced || 0}}</strong>
+          </div>
+        </ion-col>
+        <ion-col size="4" class="ion-text-end">
+          <ngx-qrcode
+            [(qrc-value)]="qrcode"
+            qrc-element-type="url"
+          ></ngx-qrcode>
+        </ion-col>
+      </ion-row>
+        <ion-item-divider class="mt-0 pt-0"></ion-item-divider>
+        <ion-grid class="font-14 text-color">
+          <ion-row>
+            <ion-col size="4" class="font-w500">Type:</ion-col>
+            <ion-col size="8">{{ received }}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="4" class="font-w500">Total Burnt:</ion-col>
+            <ion-col size="8">{{ sent }}</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="4" class="font-w500">Total Transferred:</ion-col>
+            <ion-col size="8">{{ txCount }}</ion-col>
+          </ion-row>
+        </ion-grid>
+    </div>
+
+    <div class="bg-white ion-padding ion-margin-top">
+      <ion-row>
+        <ion-col size="12">
+          <p id="block-header-text">Transactions</p>
+        </ion-col>
+      </ion-row>
+      <ion-row class="table-header">
+        <ion-col size="3" class="pt-10">TXID</ion-col>
+        <ion-col size="1" class="pt-10">BLOCK</ion-col>
+        <ion-col size="1" class="pt-10">AGE</ion-col>
+        <ion-col size="5">
+          <ion-row>
+            <ion-col size="5">FROM</ion-col>
+            <ion-col size="5">TO</ion-col>
+            <ion-col size="2">VALUE</ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="1" class="pt-10">DETAILS</ion-col>
+      </ion-row>
+      <ion-row class="text-color" *ngFor="let tx of transactions | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: txCount }">
+        <ion-col size="3" (click)="goToTransaction(tx.txid)" class="link-color">{{ tx.txid.substring(0,24) + "..." }}</ion-col>
+        <ion-col size="1">{{ tx.blockheight }}</ion-col>
+        <ion-col size="1">{{ tx.time  | momentFromNow }}</ion-col>
+        <ion-col size="5">
+          <ion-row *ngFor="let item of tx.details">
+            <ion-col size="5">{{ item.address }}</ion-col>
+            <ion-col size="5">
+              <ion-badge color="primary" *ngIf="item.category === 'receive' || item.category === 'generate'">IN</ion-badge>
+              <ion-badge color="danger" *ngIf="item.category === 'send'">OUT</ion-badge>
+            </ion-col>
+            <ion-col size="2">{{item.amount}}</ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col (click)="goToTransaction(tx.txid)" class="ion-justify-content-center"><ion-icon name="ellipsis-horizontal" class="link-color" size="large"></ion-icon></ion-col>
+      </ion-row>
+    </div>
+  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col style="margin-top:16px;">
+        Show
+        <select [(ngModel)]="perPage" (change)=onPerPageChange()>
+          <option value=25 selected>25</option>
+          <option value=50>50</option>
+          <option value=75>75</option>
+          <option value=100>100</option>
+        </select>
+        Records
+      </ion-col>
+      <ion-col class="ion-text-right">
+        <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -14,12 +14,12 @@ ion-menu.md ion-item {
   --padding-start: 10px;
   --padding-end: 10px;
   border-radius: 4px;
-  --background: rgba(var(--ion-color-secondary-rgb), 1) !important;
+  --background: rgba(var(--ion-color-primary-rgb), 1) !important;
 }
 
 ion-menu.md ion-item.selected {
   // --background: rgba(var(--ion-color-primary-rgb), 0.14);
-  --background: rgba(var(--ion-color-primary-rgb), 1) !important;
+  --background: rgba(var(--ion-color-secondary-rgb), 1) !important;
 }
 
 ion-menu.md ion-item ion-label {

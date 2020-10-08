@@ -10,7 +10,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit {
-  public selectedIndex = 0;
+  public selectedIndex = 1;
   public appPages = [
     {
       title: 'Blocks',
@@ -20,6 +20,11 @@ export class AppComponent implements OnInit {
     {
       title: 'Txns',
       url: '/transactions',
+      icon: 'paper-plane'
+    },
+    {
+      title: 'Coins',
+      url: '/colored-coins',
       icon: 'paper-plane'
     }
   ];

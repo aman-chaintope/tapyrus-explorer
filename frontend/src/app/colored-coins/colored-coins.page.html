@@ -19,16 +19,14 @@
 
     <ion-grid class="ion-padding" id="table">
       <ion-row id="table-header">
-        <ion-col size="6">TXID</ion-col>
-        <ion-col size="2">TIME</ion-col>
-        <ion-col size="2">VALUE</ion-col>
-        <ion-col size="2">Confirmation</ion-col>
+        <ion-col size="6">Color ID</ion-col>
+        <ion-col size="3">Type</ion-col>
+        <ion-col size="3">Total Issued</ion-col>
       </ion-row>
       <ion-row class="table-border-bottom" *ngFor="let txn of transactions | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: txCount }">
         <ion-col size="6" class="font-14 link-color" (click)="goToTransaction(txn.txid)">{{ txn.txid }}</ion-col>
-        <ion-col size="2" class="font-14 text-color">{{ txn.time | momentFromNow }}</ion-col>
-        <ion-col size="2" class="font-14 link-color" (click)="goToTransactionModal()">{{"Mixed"}}</ion-col>
-        <ion-col  size="2" class="font-14 text-color">{{ txn.confirmations}}</ion-col>
+        <ion-col size="3" class="font-14 text-color">{{"NFT"}}</ion-col>
+        <ion-col  size="3" class="font-14 text-color">{{ txn.amount}}</ion-col>
       </ion-row>
     </ion-grid>
   </div>

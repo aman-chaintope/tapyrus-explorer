@@ -1,0 +1,14 @@
+<ion-content class="ion-padding bg-dark-md">
+  <div class="ion-padding">
+    <ion-grid class="ion-padding text-color" id="table">
+      <ion-row id="table-header">
+        <ion-col size="9">Color ID</ion-col>
+        <ion-col size="3">Amount</ion-col>
+      </ion-row>
+      <ion-row class="table-border-bottom" *ngFor="let coin of coins">
+        <ion-col size="9" class="font-14 link-color" (click)="goToCoin(coin.id)">{{ coin.id }}</ion-col>
+        <ion-col  size="3" class="font-14 text-color">{{ coin.amount}}</ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

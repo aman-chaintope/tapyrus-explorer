@@ -34,6 +34,18 @@ const routes: Routes = [
   {
     path: 'addresses/:address',
     loadChildren: () => import('./address/address.module').then( m => m.AddressPageModule)
+  },
+  {
+    path: 'colored-coins',
+    loadChildren: () => import('./colored-coins/colored-coins.module').then( m => m.ColoredCoinsPageModule)
+  },
+  {
+    path: 'colored-coin/:coinId',
+    loadChildren: () => import('./colored-coin/colored-coin.module').then( m => m.ColoredCoinPageModule)
+  },
+  {
+    path: 'transactions-modal',
+    loadChildren: () => import('./transactions-modal/transactions-modal.module').then( m => m.TransactionsModalPageModule)
   }
 ];
 
