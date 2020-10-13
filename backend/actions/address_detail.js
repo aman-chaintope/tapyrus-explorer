@@ -6,11 +6,8 @@ const log4js = require("log4js");
 const app = require('../app.js');
 const environment = require('../environments/environment');
 const config = require(environment.CONFIG);
-
-const cl = new Client(config);
-const elect = jayson.client.tcp({
-  port: 50001
-});
+const cl = new Client(config.tapyrusd);
+const elect = jayson.client.tcp(config.electrs);
 
 log4js.configure({
   appenders: {

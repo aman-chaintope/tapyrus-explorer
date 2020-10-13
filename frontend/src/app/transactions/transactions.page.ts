@@ -61,7 +61,7 @@ export class TransactionsPage implements OnInit {
 
   goToTransaction(txid: string) {
     this.navCtrl.navigateForward(`/transactions/${txid}`);
-  }
+  }p
 
   onSearch() {
     this.httpClient

@@ -1,0 +1,40 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    depends_on:
+      - electrs
+      - tapyrusd
+    ports:
+      - "3001:3001"
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:4200"
+    command: ng serve --host 0.0.0.0
+  tapyrusd:
+    image: rantan39/tapyrusd:latest
+    environment:
+      GENESIS_BLOCK_WITH_SIG: 01000000000000000000000000000000000000000000000000000000000000000000000044cc181bd0e95c5b999a13d1fc0d193fa8223af97511ad2098217555a841b3518f18ec2536f0bb9d6d4834fcc712e9563840fe9f089db9e8fe890bffb82165849f52ba5e01210366262690cbdf648132ce0c088962c6361112582364ede120f3780ab73438fc4b402b1ed9996920f57a425f6f9797557c0e73d0c9fbafdebcaa796b136e0946ffa98d928f8130b6a572f83da39530b13784eeb7007465b673aa95091619e7ee208501010000000100000000000000000000000000000000000000000000000000000000000000000000000000ffffffff0100f2052a010000002776a92231415132437447336a686f37385372457a4b6533766636647863456b4a74356e7a4188ac00000000
+    volumes:
+      - tapyrus:/var/lib/tapyrus
+      - ./tapyrus_testnet.conf:/etc/tapyrus/tapyrus.conf
+    ports:
+      - "2377:2377"
+  electrs:
+    image: tapyrus/electrs-tapyrus:latest
+    user: root
+    volumes:
+      - electrs:/var/lib/electrs
+      - tapyrus:/var/lib/tapyrus:ro
+      - ./config.toml:/etc/electrs/config.toml:ro
+    ports:
+      - "50001:50001"
+    depends_on:
+      - tapyrusd
+    command: electrs -vvvv --timestamp --conf /etc/electrs/config.toml --db-dir /var/lib/electrs --daemon-rpc-addr tapyrusd:2377 --daemon-dir /var/lib/tapyrus/prod-1939510133 --network-id 1939510133  --electrum-rpc-addr 0.0.0.0:50001
+volumes:
+  tapyrus:
+  electrs:

@@ -26,10 +26,15 @@ create files
 these files will only appear in your local. Eg.
 ```json
 {
-  "network": "testnet",
-  "username": "user",
-  "password": "pass",
-  "port": 2377
+  "tapyrusd": {
+    "network": "testnet",
+    "username": "user",
+    "password": "pass",
+    "port": 2377
+  },
+  "electrs": {
+    "port": 50001
+  }
 }
 ```
 

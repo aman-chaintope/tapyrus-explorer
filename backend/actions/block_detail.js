@@ -4,8 +4,7 @@ const log4js = require("log4js");
 const app = require('../app.js');
 const environment = require('../environments/environment');
 const config = require(environment.CONFIG);
-
-const cl = new Client(config);
+const cl = new Client(config.tapyrusd);
 
 function getBlock(blockHash, callback) {
   cl.getBlock(blockHash)
