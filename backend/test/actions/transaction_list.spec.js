@@ -7,6 +7,7 @@ const sinon = require('sinon');
 
 describe("GET /transactions return type check", function() {
   it("/transactions", function(done) {
+    this.timeout(5000);
     supertest(app)
       .get("/transactions")
       .query({ perPage: '25', page: 1 })
@@ -42,32 +43,48 @@ describe("GET /transactions return type check", function() {
 describe("GET /transactions and then call individual transaction using /transaction/:txid", function() {
   beforeEach(() => {
     
-    sinon.stub(cl, "getBlock")
+    /*sinon.stub(cl, "getBlockchainInfo")
       .resolves({
-        hash: "5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6",
-        confirmations: 1,
-        strippedsize: 261,
-        size: 261,
-        weight: 1044,
-        height: 1236,
+        "headers": 41836,
+      });
+      
+    sinon.stub(cl, "getChainTxStats")
+    .resolves({
+      "txcount": 41919,
+    }); */
+
+    sinon.stub(cl, "command")
+    .resolves([{
+        txid: '8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f',
+        hash: '11fd6e5f137781b524db73dc644c739c9a7141991482215544198c699b7457a9',
         features: 1,
-        featuresHex: "00000001",
-        merkleroot: "39b95731fbae308d85743e2682988038980d7463ea2fc1b21f91860b243892e9",
-        immutablemerkleroot: "d837966bc672b6459385989fdbfc049773f03fd355bb62c9765cdfa51e7a19a4",
-        tx: [
-            'aa43ba8e0381fb8bb63c032476a68fb9116882aaaa823c4b644a4055b39e2ab1'
+        size: 91,
+        vsize: 91,
+        weight: 364,
+        locktime: 0,
+        vin: [ { coinbase: '0342a3000101', sequence: 4294967295 } ],
+        vout: [
+            {
+              value: 50,
+              n: 0,
+              scriptPubKey: {
+                asm: 'OP_DUP OP_HASH160 6713b478d99432aac667b7d8e87f9d06edca03bb OP_EQUALVERIFY OP_CHECKSIG',
+                hex: 'ac667b7d8e87f9d06edca03bb88ac76a9146713b478d99432a',
+                reqSigs: 1,
+                type: 'pubkeyhash',
+                addresses: [ '1AQ2CtG3jho78SrEzKe3vf6dxcEkJt5nzA' ]
+              }
+            }
         ],
-        time: 1598253741,
-        mediantime: 1598111705,
-        xfieldType: 0,
-        proof: "9fd45dcb188a5547a34fe2d181c24fd8f0f68b88d6c8951ec4db921a133dd846fb77d030bdacb1e421c49e23483937ce2c5eb3693baae040ddda8316ea3b6127",
-        nTx: 1,
-        previousblockhash: "471b4c1fcb6105c9812edde93c6dd760330daa8b3897a9484a24c3ce23683805",
-        nextblockhash: "e17286ef05705b03f2396f28f06b9afafa4502157285ad1d1ebc08537d27de57"
-      }); 
+        hex: '0100000001000000000000000000000000000000000000000000000000000000000000000042a30000060342a3000101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000',
+        blockhash: 'aa04f9cfceb4499d5df308c37b6c197a3a19439ba1893f214e5bf4a65ac3fcf5',
+        time: 1603108230,
+        blocktime: 1603108230          
+    }]);
   });
 
   it("/transactions", function(done) {
+    this.timeout(5000);
     supertest(app)
       .get("/transactions")
       .query({ perPage: '25', page: 1 })
@@ -76,7 +93,7 @@ describe("GET /transactions and then call individual transaction using /transact
       .end(function(err, res){
         if (err) done(err);
         else {
-          assert.equal(res.body.results.length,  25);
+          assert.strictEqual(res.body.results.length,  25);
           supertest(app)
           .get(`/transaction/${res.body.results[0].txid}`)
           .expect('Content-Type', /json/)
@@ -85,21 +102,19 @@ describe("GET /transactions and then call individual transaction using /transact
             if (err) done(err);
             
             const transaction = res.body;
-            assert.strictEqual(transaction.txid, "aa43ba8e0381fb8bb63c032476a68fb9116882aaaa823c4b644a4055b39e2ab1");
-            assert.strictEqual(transaction.hash, "a55def1b922ed0bcc35ca369e0dba226862fb0b29981c34f2a5735cb13b0a78e");
+            assert.strictEqual(transaction.txid, "8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f");
+            assert.strictEqual(transaction.hash, "11fd6e5f137781b524db73dc644c739c9a7141991482215544198c699b7457a9");
             assert.strictEqual(transaction.features, 1);
-            assert.strictEqual(transaction.size, 90);
-            assert.strictEqual(transaction.vsize, 90);
-            assert.strictEqual(transaction.weight, 360);
+            assert.strictEqual(transaction.size, 91);
+            assert.strictEqual(transaction.vsize, 91);
+            assert.strictEqual(transaction.weight, 364);
             assert.strictEqual(transaction.locktime, 0);
-            assert.strictEqual(transaction.hex, "01000000010000000000000000000000000000000000000000000000000000000000000000e37700000502e3770101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000");
-            assert.strictEqual(transaction.blockhash, "2b3e4a0c0da2b6700d8fcb2349412b786e93849d75cdc0cab202bfeeb30c0596");
-            assert.strictEqual(transaction.time, 1599509728);
-            assert.strictEqual(transaction.blocktime, 1599509728);
-            
-            assert.strictEqual(transaction.vin[0].coinbase, "02e3770101");
+            assert.strictEqual(transaction.hex, "0100000001000000000000000000000000000000000000000000000000000000000000000042a30000060342a3000101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000");
+            assert.strictEqual(transaction.blockhash, "aa04f9cfceb4499d5df308c37b6c197a3a19439ba1893f214e5bf4a65ac3fcf5");
+            assert.strictEqual(transaction.time, 1603108230);
+            assert.strictEqual(transaction.blocktime, 1603108230);
+            assert.strictEqual(transaction.vin[0].coinbase, "0342a3000101");
             assert.strictEqual(transaction.vin[0].sequence, 4294967295);
-  
             assert.strictEqual(transaction.vout[0].value, 50);
             assert.strictEqual(transaction.vout[0].n, 0);
             assert.strictEqual(transaction.vout[0].scriptPubKey.asm, "OP_DUP OP_HASH160 6713b478d99432aac667b7d8e87f9d06edca03bb OP_EQUALVERIFY OP_CHECKSIG");
@@ -107,7 +122,6 @@ describe("GET /transactions and then call individual transaction using /transact
             assert.strictEqual(transaction.vout[0].scriptPubKey.reqSigs, 1);
             assert.strictEqual(transaction.vout[0].scriptPubKey.type, "pubkeyhash");
             assert.strictEqual(transaction.vout[0].scriptPubKey.addresses[0], "1AQ2CtG3jho78SrEzKe3vf6dxcEkJt5nzA");
-  
             done();
           });  
         }

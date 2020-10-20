@@ -56,13 +56,28 @@
         <ion-col size="1" class="pt-10">DETAILS</ion-col>
       </ion-row>
       <ion-row class="text-color" *ngFor="let tx of transactions | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: txCount }">
-        <ion-col size="3" (click)="goToTransaction(tx.txid)" class="link-color">{{ tx.txid.substring(0,30) + "..." }}</ion-col>
+        <ion-col size="3" (click)="goToTransaction(tx.txid)" class="link-color">{{ tx.txid.substring(0,30) + ".." }}</ion-col>
         <ion-col size="1">{{ tx.blockheight }}</ion-col>
         <ion-col size="1">{{ tx.time  | momentFromNow }}</ion-col>
         <ion-col size="6">
           <ion-row *ngFor="let output of tx.outputs; let i=index">
-            <ion-col size="5" (click)="goToAddressPage(tx.inputs[i])" class="link-color">{{ tx.inputs[i].substring(0,18) + "..." }}</ion-col>
-            <ion-col size="5" (click)="goToAddressPage(output)" class="link-color">{{ output.substring(0,18) + "..." }}</ion-col>
+            <ion-col size="5">
+              <ion-row>
+                <ion-col size="10" *ngIf="tx.inputs[i] !== '' " (click)="goToAddressPage(tx.inputs[i])" class="link-color">{{ tx.inputs[i].substring(0,18) + "..." }}</ion-col>
+                <ion-col size="10" *ngIf="tx.inputs[i] === '' ">{{ tx.inputs[i]}}</ion-col>
+                <ion-col size="2">
+                  <ion-badge color="primary">IN</ion-badge>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col size="5">
+              <ion-row>
+                <ion-col size="10" (click)="goToAddressPage(output)" class="link-color">{{ output.substring(0,18) + ".." }}</ion-col>
+                <ion-col size="2">
+                  <ion-badge color="danger">OUT</ion-badge>
+                </ion-col>
+              </ion-row>
+            </ion-col>
             <ion-col size="2">{{tx.amounts[i]}}</ion-col>
 
           </ion-row>

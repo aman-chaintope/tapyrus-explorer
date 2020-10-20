@@ -89,10 +89,10 @@ export class AddressPage implements OnInit {
       }),
     }).subscribe(
       data => {
-        this.received = 0;
-        this.sent = 0;
-        this.result = data[1];
+        this.received = data[2];
         this.balanced = data[0] / 100000000;
+        this.sent = this.received - this.balanced;
+        this.result = data[1];
         this.txCount = data[3];
 
         if (this.result) {
@@ -108,6 +108,7 @@ export class AddressPage implements OnInit {
             }
             transaction['outputs'] = outputs;
             transaction['amounts'] = amounts;
+            console.log(transaction);
             return transaction;
           });
 
